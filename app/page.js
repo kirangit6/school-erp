@@ -142,8 +142,12 @@ import StudentList from "./components/StudentList";
 // //  main Route.js
 
 export default async function Page() {
-  await connectDB();
-  const students = await Student.find();
-
-  return <StudentList students={JSON.parse(JSON.stringify(students))} />;
+  try {
+    await connectDB();
+    const students = await Student.find();
+    return <StudentList students={JSON.parse(JSON.stringify(students))} />;
+  } catch (err) {
+    console.error("DB ERROR:", err);
+    return <div>Error loading students</div>;
+  }
 }

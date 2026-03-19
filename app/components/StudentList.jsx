@@ -13,10 +13,10 @@ export default function StudentList({ students }) {
   const indexOfFirst = indexOfLast - itemsPerPage;
 
   const currentStudents = students.slice(indexOfFirst, indexOfLast);
-useEffect(() => {
-  fetch(`/api/students?page=${currentPage}`)
-}, [currentPage]);
-  // ✅ Counts निकालो
+  useEffect(() => {
+    fetch(`/api/students?page=${currentPage}`);
+  }, [currentPage]);
+
   const totalStudents = students.length;
 
   const class10 = students.filter((s) => s.grade === "10th").length;
@@ -100,42 +100,41 @@ useEffect(() => {
                   </tr>
                 ))}
               </tbody>
-             
             </table>
             <div className="flex justify-left mt-4 gap-2">
-               {/* Prev */}
-               <button
-                 onClick={() => setCurrentPage((p) => p - 1)}
-                 disabled={currentPage === 1}
-                 className="px-3 py-1 bg-gray-300 text-gray-900 rounded disabled:opacity-50"
-               >
-                 Prev
-               </button>
+              {/* Prev */}
+              <button
+                onClick={() => setCurrentPage((p) => p - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 bg-gray-300 text-gray-900 rounded disabled:opacity-50"
+              >
+                Prev
+              </button>
 
-               {/* Page Numbers */}
-               {Array.from({ length: totalPages }, (_, i) => (
-                 <button
-                   key={i}
-                   onClick={() => setCurrentPage(i + 1)}
-                   className={`px-3 py-1 rounded ${
-                     currentPage === i + 1
-                       ? "bg-blue-500 text-white"
-                       : "bg-gray-200 text-black"
-                   }`}
-                 >
-                   {i + 1}
-                 </button>
-               ))}
+              {/* Page Numbers */}
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === i + 1
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-black"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
 
-               {/* Next */}
-               <button
-                 onClick={() => setCurrentPage((p) => p + 1)}
-                 disabled={currentPage === totalPages}
-                 className="px-3 py-1 bg-gray-200 text-gray-900 rounded disabled:opacity-50"
-               >
-                 Next
-               </button>
-             </div>
+              {/* Next */}
+              <button
+                onClick={() => setCurrentPage((p) => p + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 bg-gray-200 text-gray-900 rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
           </div>
         </main>
       </div>
