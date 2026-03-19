@@ -30,7 +30,7 @@ export async function DELETE(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const { id } =  await params;
 
     const deletedStudent = await Student.findByIdAndDelete(id);
 
@@ -55,7 +55,7 @@ export async function PUT(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = params; // remove 'await'
+    const { id } = await params; // remove 'await'
 
     const body = await req.json();
 
