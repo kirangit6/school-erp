@@ -2,10 +2,10 @@ import  connectDB  from "../../lib/mongodb";
 import Student from "../../models/Student";
 
 export async function GET() {
-  console.log("API HIT");
+
   await connectDB();
   const students = await Student.find();
-  console.log("students",students)
+
   return Response.json(students);
 }
 
@@ -26,5 +26,3 @@ export async function POST(req) {
   }
 }
 
-
-// id routeModule.js
