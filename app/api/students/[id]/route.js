@@ -7,8 +7,8 @@ export async function GET(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = params; // remove 'await'
-
+    const { id } =  await params; // remove 'await'
+// const id = params.id
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
@@ -35,13 +35,19 @@ export async function DELETE(req, { params }) {
     const deletedStudent = await Student.findByIdAndDelete(id);
 
     if (!deletedStudent) {
-      return NextResponse.json({ message: "Student not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Student not found" },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json({ message: "Deleted successfully" });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 },
+    );
   }
 }
 
@@ -59,7 +65,10 @@ export async function PUT(req, { params }) {
     });
 
     if (!updatedStudent) {
-      return NextResponse.json({ message: "Student not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Student not found" },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json({
@@ -71,4 +80,3 @@ export async function PUT(req, { params }) {
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 }
-

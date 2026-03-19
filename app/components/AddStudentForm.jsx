@@ -32,8 +32,6 @@ export default function AddStudentForm() {
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // 👉 Contact: only digits allow
     if (name === "contact" && !/^\d*$/.test(value)) return;
 
     setForm((prev) => ({
@@ -83,20 +81,16 @@ export default function AddStudentForm() {
       alert("Something went wrong");
     }
   };
+
   useEffect(() => {
     if (!id) return;
-
     const fetchStudent = async () => {
       try {
         const res = await fetch(`/api/students/${id}`);
-
-        // ✅ Check response status
         if (!res.ok) {
           console.error("Failed to fetch student");
           return;
         }
-
-        // ✅ Check empty response
         const text = await res.text();
 
         if (!text) {
@@ -115,7 +109,6 @@ export default function AddStudentForm() {
         console.error("Error:", error);
       }
     };
-
     fetchStudent();
   }, [id]);
 
