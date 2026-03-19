@@ -1,97 +1,74 @@
-import  connectDB  from "../../../lib/mongodb";
+import connectDB from "../../../lib/mongodb";
 import Student from "../../../models/Student";
 import mongoose from "mongoose";
+import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = await params; 
+    const { id } = params; // remove 'await'
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return Response.json({ error: "Invalid ID" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
 
-    const student = await Student.findById(id); 
-
-    console.log("DB RESULT:", student);
+    const student = await Student.findById(id);
 
     if (!student) {
-      return Response.json(
-        { error: "Student not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Student not found" }, { status: 404 });
     }
 
-    return Response.json(student);
+    return NextResponse.json(student);
   } catch (error) {
     console.error("ERROR:", error);
-    return Response.json(
-      { error: "Server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
-export async function DELETE(request, { params }) {
+
+export async function DELETE(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = await params;
+    const { id } = params;
 
     const deletedStudent = await Student.findByIdAndDelete(id);
 
     if (!deletedStudent) {
-      return Response.json(
-        { message: "Student not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "Student not found" }, { status: 404 });
     }
 
-    return Response.json({ message: "Deleted successfully" });
+    return NextResponse.json({ message: "Deleted successfully" });
   } catch (error) {
     console.error(error);
-    return Response.json(
-      { error: "Something went wrong" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
 }
+
 export async function PUT(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = await params; // ✅ important
+    const { id } = params; // remove 'await'
 
-    const body = await req.json(); // ✅ important
-    console.log("UPDATE BODY:", body);
+    const body = await req.json();
 
-    const updatedStudent = await Student.findByIdAndUpdate(
-      id,
-      body,
-      {
-        new: true,        // ✅ updated data return करेगा
-        runValidators: true,
-      }
-    );
+    const updatedStudent = await Student.findByIdAndUpdate(id, body, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!updatedStudent) {
-      return Response.json(
-        { message: "Student not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "Student not found" }, { status: 404 });
     }
 
-    return Response.json({
+    return NextResponse.json({
       message: "Updated successfully",
       data: updatedStudent,
     });
   } catch (error) {
     console.error(error);
-    return Response.json(
-      { error: "Update failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 }
-
 
