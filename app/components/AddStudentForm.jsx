@@ -102,7 +102,7 @@ export default function AddStudentForm() {
           console.error("Empty response from API");
           return;
         }
-
+setLoading(false);
         const data = JSON.parse(text);
 
         setForm({
