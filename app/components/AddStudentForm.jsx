@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 export default function AddStudentForm() {
   const [form, setForm] = useState({ name: "", grade: "", contact: "" });
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
@@ -62,6 +63,7 @@ export default function AddStudentForm() {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) return;
+    setLoading(true);
     const url = id ? `/api/students/${id}` : `/api/students`;
     const method = id ? "PUT" : "POST";
 
@@ -74,10 +76,12 @@ export default function AddStudentForm() {
     });
 
     if (res.ok) {
+      setLoading(false);
       alert(id ? "Updated Successfully" : "Added Successfully");
       router.push("/");
       router.refresh();
     } else {
+      setLoading(false);
       alert("Something went wrong");
     }
   };
@@ -85,6 +89,7 @@ export default function AddStudentForm() {
   useEffect(() => {
     if (!id) return;
     const fetchStudent = async () => {
+      setLoading(true);
       try {
         const res = await fetch(`/api/students/${id}`);
         if (!res.ok) {
@@ -106,21 +111,26 @@ export default function AddStudentForm() {
           contact: data.contact || "",
         });
       } catch (error) {
+        setLoading(true);
         console.error("Error:", error);
       }
     };
     fetchStudent();
   }, [id]);
-
-  console.log("form", form);
-
+  if (loading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white/70 z-50">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   return (
     <form
       onSubmit={handleSubmit}
       className="max-w-md mx-auto mt-10 bg-white p-6 rounded-xl shadow-md border"
     >
       <h1 className="text-2xl font-bold mb-6 text-gray-800 text-center">
-          {id ? "Update Student" : "Add Student"}
+        {id ? "Update Student" : "Add Student"}
       </h1>
 
       {/* Name */}
@@ -188,9 +198,16 @@ export default function AddStudentForm() {
         </button>
         <button
           type="submit"
-          className="w-full bg-blue-400 text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
+          disabled={loading}
+          className="w-full bg-blue-400 text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition flex justify-center items-center"
         >
-          {id ? "Update Student" : "Add Student"}
+          {loading ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : id ? (
+            "Update Student"
+          ) : (
+            "Add Student"
+          )}
         </button>
       </div>
     </form>
