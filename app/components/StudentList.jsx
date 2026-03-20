@@ -29,7 +29,6 @@ export default function StudentList({ students }) {
         <h2 className="text-2xl font-bold mb-6">School ERP</h2>
         <ul className="space-y-4">
           <li className="hover:text-gray-300 cursor-pointer">Dashboard</li>
-          <li className="hover:text-gray-300 cursor-pointer">Students</li>
         </ul>
       </aside>
 
